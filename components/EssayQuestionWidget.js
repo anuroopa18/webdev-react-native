@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {ScrollView,View, Alert,Card,TextInput} from 'react-native'
-import {Text, ListItem,FormLabel,FormInput,FormValidationMessage,Button,CheckBox} from 'react-native-elements'
+import {ScrollView,View, Alert,TextInput} from 'react-native'
+import {Text, ListItem,FormLabel,FormInput,FormValidationMessage,Button,CheckBox,Card} from 'react-native-elements'
 
 class EssayQuestionWidget extends Component {
     static navigationOptions = {title: 'Essay Question Editor'}
@@ -11,7 +11,8 @@ class EssayQuestionWidget extends Component {
             widgetId:'',
             title:'',
             description:'',
-            points:''
+            points:'',
+            essay:{}
 
 
         }
@@ -29,6 +30,8 @@ class EssayQuestionWidget extends Component {
         })
 
     }
+
+
 
     updateForm(newState){
         this.setState(newState);
@@ -51,14 +54,15 @@ class EssayQuestionWidget extends Component {
         }).then(function(response){
             return response.json();
         }).then(this.props.navigation
-            .navigate('Widget',{widgetId: this.state.widgetId}));
+            .navigate('Widget',{widgetId: this.state.widgetId}))
+            .then(() => Alert.alert('Question Added'));
     }
 
 
     render() {
         return(
             <ScrollView style={{marginLeft:15,marginRight:15}}>
-
+              <Card>
                 <FormLabel>Title</FormLabel>
                 <FormInput  onChangeText={text => this.updateForm({title: text}) }/>
                 <FormValidationMessage>
@@ -100,7 +104,9 @@ class EssayQuestionWidget extends Component {
                                }}
                                onPress={() => this.addEssayWidget()}
                     />
+
                 </View>
+              </Card>
 
             </ScrollView>
         )

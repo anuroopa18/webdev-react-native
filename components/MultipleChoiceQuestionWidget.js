@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {ScrollView,View, Alert,Card} from 'react-native'
-import {Text, ListItem,FormLabel,FormInput,FormValidationMessage,Button,CheckBox} from 'react-native-elements'
+import {ScrollView,View, Alert} from 'react-native'
+import {Text, ListItem,FormLabel,FormInput,FormValidationMessage,Button,CheckBox,Card} from 'react-native-elements'
 
 class MultipleChoiceQuestionWidget extends Component {
     static navigationOptions = {title: 'Multiple Choice Question Editor'}
@@ -12,7 +12,8 @@ class MultipleChoiceQuestionWidget extends Component {
             title:'',
             description:'',
             points:'',
-            options:''
+            options:'',
+            correctOption:''
 
         }
 
@@ -43,22 +44,22 @@ class MultipleChoiceQuestionWidget extends Component {
                 points:this.state.points,
                 widgetId:this.state.widgetId,
                 options:this.state.options,
-                type:this.state.qType
+                type:this.state.qType,
+                correctOption:this.state.correctOption
             }),
             headers:{
                 'content-type': 'application/json'
             }
         }).then(function(response){
             return response.json();
-        }).then(this.props.navigation
-            .navigate('ExamWidget',{widgetId: this.state.widgetId}));
+        }).then(() => Alert.alert('Question Added'));
     }
 
 
     render() {
         return(
             <ScrollView style={{marginLeft:15,marginRight:15}}>
-
+                <Card>
                 <FormLabel>Title</FormLabel>
                 <FormInput  onChangeText={text => this.updateForm({title: text}) }/>
                 <FormValidationMessage>
@@ -80,6 +81,13 @@ class MultipleChoiceQuestionWidget extends Component {
                 <FormValidationMessage>
                     Please provide options in the given format option 1\noption 2\noption 3\noption 4
                 </FormValidationMessage>
+
+                    <Text/>
+                    <FormLabel>Correct Option</FormLabel>
+                    <FormInput onChangeText={text => this.updateForm({correctOption: text}) }/>
+                    <FormValidationMessage>
+                       Correct option required
+                    </FormValidationMessage>
                 <Text/>
                 <View style={{flex: 1, flexDirection: 'row'}}>
                     <Button	backgroundColor="red"
@@ -107,7 +115,7 @@ class MultipleChoiceQuestionWidget extends Component {
                                onPress={() => this.addMultipleChoiceWidget()}
                     />
                 </View>
-
+                </Card>
             </ScrollView>
         )
     }

@@ -12,7 +12,9 @@ import ExamWidget from './components/ExamWidget'
 import Preview from './components/Preview'
 import MultipleChoiceQuestionWidget from './components/MultipleChoiceQuestionWidget'
 import EssayQuestionWidget from './components/EssayQuestionWidget'
-
+import TrueOrFalseQuestionWidget from './components/TrueOrFalseQuestionWidget'
+import FillInTheBlanksQuestionWidget from './components/FillInTheBlanksQuestionWidget'
+import EssayPreview from './components/EssayPreview'
 
 class Home extends React.Component {
     static navigationOptions = {
@@ -48,7 +50,10 @@ const App = createStackNavigator({
     ExamWidget,
     Preview,
     MultipleChoiceQuestionWidget,
-    EssayQuestionWidget
+    EssayQuestionWidget,
+    TrueOrFalseQuestionWidget,
+    FillInTheBlanksQuestionWidget,
+    EssayPreview
 
 
 

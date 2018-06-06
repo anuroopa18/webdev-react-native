@@ -107,7 +107,6 @@ class WidgetList extends Component {
                             key={index}
                             onPress={() => this.props.navigation
                                 .navigate('AssignmentWidget',{widgetId: widget.id,lessonId:this.state.lessonId})}
-                            subtitle={widget.description}
                             title={widget.title}
                            leftIcon={<Icon
                                 reverse
@@ -118,6 +117,8 @@ class WidgetList extends Component {
                                 style={{paddingRight:20}}
                            />}
                         />))}
+                <Text></Text>
+                <Text></Text>
                 <Text h3>Exams <Icon
                     reverse
                     name='plus-circle'
@@ -134,7 +135,6 @@ class WidgetList extends Component {
                                 key={index}
                                 onPress={() => this.props.navigation
                                     .navigate('ExamWidget',{widgetId: widget.id,lessonId:this.state.lessonId}) }
-                                subtitle={widget.description}
                                 title={widget.examTitle}
                                 leftIcon={<Icon
                                     reverse

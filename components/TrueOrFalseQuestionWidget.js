@@ -1,9 +1,12 @@
 import React, {Component} from 'react'
-import {ScrollView,View, Alert,Card,TextInput} from 'react-native'
-import {Text, ListItem,FormLabel,FormInput,FormValidationMessage,Button,CheckBox} from 'react-native-elements'
+import {ScrollView,View, Alert,TextInput} from 'react-native'
+import {Text, ListItem,FormLabel,FormInput,FormValidationMessage,Button,CheckBox,Card} from 'react-native-elements'
 
-class EssayQuestionWidget extends Component {
-    static navigationOptions = {title: 'Essay Question Editor'}
+
+
+
+class TrueOrFalseQuestionWidget extends Component {
+    static navigationOptions = {title: 'True Or false Question Editor'}
     constructor(props){
         super(props)
         this.state={
@@ -11,12 +14,14 @@ class EssayQuestionWidget extends Component {
             widgetId:'',
             title:'',
             description:'',
-            points:''
-
+            points:'',
+            isTrue:1
 
         }
 
     }
+
+
 
     componentDidMount(){
         const{navigation} =this.props;
@@ -34,15 +39,17 @@ class EssayQuestionWidget extends Component {
         this.setState(newState);
     }
 
-    addEssayWidget = () =>{
-        fetch("http://192.168.0.12:8080/api/exam/"+ this.state.widgetId +"/essay",{
+    addTrueOrFalseWidget = () =>{
+        fetch("http://192.168.0.12:8080/api/exam/"+ this.state.widgetId +"/truefalse",{
             method:'post',
             body: JSON.stringify({
                 title:this.state.title,
                 description:this.state.description,
                 points:this.state.points,
                 widgetId:this.state.widgetId,
-                type:this.state.qType
+                type:this.state.qType,
+                isTrue:this.state.isTrue
+
 
             }),
             headers:{
@@ -50,15 +57,14 @@ class EssayQuestionWidget extends Component {
             }
         }).then(function(response){
             return response.json();
-        }).then(this.props.navigation
-            .navigate('Widget',{widgetId: this.state.widgetId}));
+        }).then(() => Alert.alert('Question Added'));;
     }
 
 
     render() {
         return(
             <ScrollView style={{marginLeft:15,marginRight:15}}>
-
+                <Card>
                 <FormLabel>Title</FormLabel>
                 <FormInput  onChangeText={text => this.updateForm({title: text}) }/>
                 <FormValidationMessage>
@@ -75,6 +81,13 @@ class EssayQuestionWidget extends Component {
                     Points is required
                 </FormValidationMessage>
                 <Text/>
+
+                    <CheckBox title='The answer is true' onPress={() => this.updateForm
+                    ({isTrue: !this.state.isTrue})}
+                              checked={this.state.isTrue}/>
+                    <Text/>
+
+
                 <View style={{flex: 1, flexDirection: 'row'}}>
                     <Button	backgroundColor="red"
                                color="white"
@@ -98,12 +111,12 @@ class EssayQuestionWidget extends Component {
                                    borderWidth: 0,
                                    borderRadius: 10
                                }}
-                               onPress={() => this.addEssayWidget()}
+                               onPress={() => this.addTrueOrFalseWidget()}
                     />
                 </View>
-
+                </Card>
             </ScrollView>
         )
     }
 }
-export default EssayQuestionWidget
+export default TrueOrFalseQuestionWidget

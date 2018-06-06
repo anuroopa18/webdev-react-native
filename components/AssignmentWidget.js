@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {View, Alert} from 'react-native'
-import {Text, ListItem,FormLabel,FormInput,FormValidationMessage,Button,CheckBox} from 'react-native-elements'
+import {ScrollView, Alert} from 'react-native'
+import {Text, ListItem,FormLabel,FormInput,FormValidationMessage,Button,CheckBox,Card} from 'react-native-elements'
 
 class AssignmentWidget extends Component {
     static navigationOptions = {title: 'Assignment Editor'}
@@ -60,7 +60,7 @@ class AssignmentWidget extends Component {
             }
         }).then(function(response){
             return response.json();
-        });
+        }).then(() => Alert.alert('Changed Saved'));
 
     }
 
@@ -68,7 +68,8 @@ class AssignmentWidget extends Component {
 
     render() {
         return(
-            <View style={{marginLeft:15,marginRight:15}}>
+            <ScrollView style={{marginLeft:15,marginRight:15}}>
+                <Card>
                 <FormLabel style={{fontcolor:'black'}}>Title</FormLabel>
                 <FormInput onChangeText={text => this.updateForm({title: text}) } value={this.state.assignmentDisplay.title}/>
                 <FormValidationMessage>
@@ -99,7 +100,9 @@ class AssignmentWidget extends Component {
                            title="Preview"
                            onPress={() => this.props.navigation
                     .navigate("Preview", {assignmentDisplay:this.state.assignmentDisplay})}/>
-            </View>
+                </Card>
+            </ScrollView>
+
         )
     }
 }
