@@ -26,8 +26,8 @@ class WidgetList extends Component {
         const lessonId = navigation.getParam("lessonId")
         this.setState({
             lessonId:lessonId,
-            assignment:{id:1,name:"New Assignment",typ:"Assignment",points:0},
-            exam:{id:10,name:"New Exam",typ:"Exam"}
+            assignment:{id:1,title:"New Assignment",typ:"Assignment",points:0},
+            exam:{id:10,examTitle:"New Exam",typ:"Exam"}
         })
 
         fetch("https://webdev-smr1.herokuapp.com/api/lesson/"+lessonId+"/widget")
@@ -108,7 +108,7 @@ class WidgetList extends Component {
                             onPress={() => this.props.navigation
                                 .navigate('AssignmentWidget',{widgetId: widget.id,lessonId:this.state.lessonId})}
                             subtitle={widget.description}
-                            title={widget.name}
+                            title={widget.title}
                            leftIcon={<Icon
                                 reverse
                                 name='trash'
@@ -133,9 +133,9 @@ class WidgetList extends Component {
                             <ListItem
                                 key={index}
                                 onPress={() => this.props.navigation
-                                    .navigate('ExamEditor',{widgetId: widget.id,lessonId:this.state.lessonId}) }
+                                    .navigate('ExamWidget',{widgetId: widget.id,lessonId:this.state.lessonId}) }
                                 subtitle={widget.description}
-                                title={widget.name}
+                                title={widget.examTitle}
                                 leftIcon={<Icon
                                     reverse
                                     name='trash'

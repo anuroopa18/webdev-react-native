@@ -47,7 +47,7 @@ class AssignmentWidget extends Component {
     }
 
     updateAssignment = () => {
-        fetch("https://webdev-smr1.herokuapp.com/api/assignment/"+ this.state.widgetId,{
+        fetch("http://192.168.0.12:8080/api/assignment/"+ this.state.widgetId,{
             method:'put',
             body: JSON.stringify({
                 title:this.state.title,
