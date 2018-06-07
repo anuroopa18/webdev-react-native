@@ -32,14 +32,16 @@ class FillInTheBlanksPreview extends Component {
                 <Card containerStyle={{width:350,marginLeft:20}}>
                     <View style={{flex: 1, flexDirection: 'row'}}>
                         <Text h4>{this.state.fillInTheBlanks.title}</Text>
-
                            <View style={{width:10}}/>
                             <Text style={{fontSize: 20,paddingTop:5}}>{this.state.fillInTheBlanks.points} pts </Text>
                         </View>
                     <Text> </Text>
                     <Text style={{fontSize: 20}}> {this.state.fillInTheBlanks.description} </Text>
                     <Text> </Text>
-                    <Text> </Text>
+                    <View>
+                        <Text> 2 + 2 = [four=4]</Text>
+                        <Text>[two=2]+ 2 = 4</Text>
+                    </View>
                     <View style={{flex: 1, flexDirection: 'row'}}>
                         <Button backgroundColor="red"
                                 color="white"

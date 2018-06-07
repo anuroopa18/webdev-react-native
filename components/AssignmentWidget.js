@@ -70,7 +70,9 @@ class AssignmentWidget extends Component {
             }
         }).then(function (response) {
             return response.json();
-        }).then(() => Alert.alert('Changed Saved'));
+        }).then(() => Alert.alert('Changed Saved'))
+            .then(() => this.props.navigation
+                .navigate('LessonList'));
 
     }
 

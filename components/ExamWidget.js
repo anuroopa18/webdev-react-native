@@ -50,7 +50,7 @@ class ExamWidget extends Component {
     }
 
     updateExamTitle = () => {
-        fetch("http://192.168.0.12:8080/api/exam/" + this.state.widgetId, {
+        fetch("https://webdev-smr1.herokuapp.com/api/exam/" + this.state.widgetId, {
             method: 'put',
             body: JSON.stringify({
                 examTitle: this.state.examTitle,
@@ -60,7 +60,9 @@ class ExamWidget extends Component {
             }
         }).then(function (response) {
             return response.json();
-        }).then(() => Alert.alert('Updated!'));
+        }).then(() => Alert.alert('Updated!'))
+            .then(() => this.props.navigation
+                .navigate('LessonList'));
     }
 
     componentWillReceiveProps() {

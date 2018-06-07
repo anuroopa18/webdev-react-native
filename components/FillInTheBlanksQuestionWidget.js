@@ -66,7 +66,7 @@ class FillInTheBlanksQuestionWidget extends Component {
             }
         }).then(function(response){
             return response.json();
-        }).then(() => Alert.alert('Question Added'))
+        }).then(() => Alert.alert('Question Updated!'))
             .then(() => this.props.navigation
                 .navigate('WidgetList',{widgetId: this.state.widgetId}));
     }

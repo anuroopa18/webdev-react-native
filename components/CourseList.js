@@ -27,7 +27,7 @@ class CourseList extends Component {
                         title={course.title}
                         key={index}/>
                 ))}
-                
+
             </ScrollView>
         )
     }
