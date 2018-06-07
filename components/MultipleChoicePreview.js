@@ -16,20 +16,12 @@ class MultipleChoicePreview extends Component {
     componentDidMount() {
         const {navigation} = this.props;
         const questionId = navigation.getParam("questionId")
+        const multipleChoice = navigation.getParam("multipleChoice")
         this.setState({
-            questionId:questionId
-
+            questionId:questionId,
+            multipleChoice:multipleChoice
 
         })
-        this.findMultipleChoiceQuestionById(questionId)
-    }
-
-    findMultipleChoiceQuestionById = (questionId) => {
-
-        fetch("https://webdev-smr1.herokuapp.com/api/base/"+questionId)
-            .then(response => (response.json()))
-            .then(multipleChoice => this.setState({multipleChoice}))
-
 
     }
 
@@ -37,49 +29,55 @@ class MultipleChoicePreview extends Component {
     render() {
         var radioProps = []
         this.state.multipleChoice.options.split(",").map((i,index) => radioProps.push({label:i,value:index}))
-        let pickerObjects = radioProps.map((item, i) =>  <Picker.Item  label={item.label} value={i.value}/>);
+
 
 
         return(
-            <ScrollView style={{padding: 15}}>
-                <Card>
-                    <Text style={{fontSize:30}}> {this.state.multipleChoice.title}  <Text style={{fontSize:20,textAlign: 'right'}}> {this.state.multipleChoice.points} pts </Text> </Text>
-                    <Text> </Text>
+            <ScrollView>
+                <Card containerStyle={{width:350,marginLeft:20}}>
+                    <View style={{flex: 1, flexDirection: 'row'}}>
+                        <Text h4>{this.state.multipleChoice.title}</Text>
+
+                        <View style={{width:10}}/>
+                        <Text style={{fontSize: 20,paddingTop:5}}>{this.state.multipleChoice.points} pts </Text>
+                    </View>
                     <Text style={{fontSize:20}}> {this.state.multipleChoice.description} </Text>
                     <Text> </Text>
-                    <View>
+
                         <RadioForm radio_props={radioProps}
                                    initial={0}
+                                   animation={'bounceIn'}
+                                   style={{alignItems:'flex-start'}}
+                                   onPress={() => this.props.navigation
+                                       .navigate("MultipleChoiceQuestionWidget")}
                         />
-                        <Picker  selectedValue={0}>
 
-                            { pickerObjects}
-                        </Picker>
-                    </View>
+
 
                     <Text> </Text>
                     <View style={{flex: 1, flexDirection: 'row'}}>
                         <Button	backgroundColor="red"
                                    color="white"
                                    title="Cancel"
-                                   style= {{
+                                   buttonStyle={{
                                        width: 100,
                                        height: 45,
                                        borderColor: "transparent",
                                        borderWidth: 0,
-                                       borderRadius: 10
+                                       borderRadius: 5
                                    }}
                         />
-                        <Button	backgroundColor="#1a75ff"
+                        <Button
                                    color="white"
                                    title="Submit"
-                                   style= {{
+                                   buttonStyle={{
                                        backgroundColor: "rgba(92, 99,216, 1)",
                                        width: 100,
                                        height: 45,
                                        borderColor: "transparent",
                                        borderWidth: 0,
-                                       borderRadius: 10
+                                       borderRadius: 5
+
                                    }}
                         />
                     </View>

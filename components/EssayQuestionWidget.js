@@ -7,14 +7,12 @@ class EssayQuestionWidget extends Component {
     constructor(props){
         super(props)
         this.state={
-            qType:'',
             widgetId:'',
             title:'',
             description:'',
             points:'',
+            questionId:'',
             essay:{}
-
-
         }
 
     }
@@ -22,12 +20,21 @@ class EssayQuestionWidget extends Component {
     componentDidMount(){
         const{navigation} =this.props;
         const widgetId = navigation.getParam("widgetId")
-        const qType = navigation.getParam("type")
+        const questionId = navigation.getParam("questionId")
         this.setState({
             widgetId:widgetId,
-            qType:qType
+            questionId:questionId
 
         })
+        this.findEssayQuestionById(questionId)
+
+    }
+
+    findEssayQuestionById = (questionId) => {
+
+        fetch("https://webdev-smr1.herokuapp.com/api/base/"+questionId)
+            .then(response => (response.json()))
+            .then(essay => this.setState({essay}))
 
     }
 
@@ -37,73 +44,88 @@ class EssayQuestionWidget extends Component {
         this.setState(newState);
     }
 
-    addEssayWidget = () =>{
-        fetch("https://webdev-smr1.herokuapp.com/api/exam/"+ this.state.widgetId +"/essay",{
-            method:'post',
+    updateEssayWidget = () =>{
+        fetch("https://webdev-smr1.herokuapp.com/api/essay/"+ this.state.questionId,{
+            method:'put',
             body: JSON.stringify({
                 title:this.state.title,
                 description:this.state.description,
-                points:this.state.points,
-                widgetId:this.state.widgetId,
-                type:this.state.qType
-
+                points:this.state.points
             }),
             headers:{
                 'content-type': 'application/json'
             }
         }).then(function(response){
             return response.json();
-        }).then(this.props.navigation
-            .navigate('Widget',{widgetId: this.state.widgetId}))
-            .then(() => Alert.alert('Question Added'));
+        }).then(() => Alert.alert('Question Updated!'))
+            .then(() => this.props.navigation
+                .navigate('WidgetList',{widgetId: this.state.widgetId}));
     }
 
 
     render() {
         return(
-            <ScrollView style={{marginLeft:15,marginRight:15}}>
+            <ScrollView>
               <Card>
                 <FormLabel>Title</FormLabel>
-                <FormInput  onChangeText={text => this.updateForm({title: text}) }/>
+                <FormInput  onChangeText={text => this.updateForm({title: text}) } value={this.state.essay.title}/>
                 <FormValidationMessage>
                     Title is required
                 </FormValidationMessage>
                 <FormLabel>Description</FormLabel>
-                <FormInput onChangeText={text => this.updateForm({description: text}) }/>
+                <FormInput onChangeText={text => this.updateForm({description: text}) } value={this.state.essay.description}/>
                 <FormValidationMessage>
                     Description is required
                 </FormValidationMessage>
                 <FormLabel>Points</FormLabel>
-                <FormInput onChangeText={text => this.updateForm({points: text}) }/>
+                <FormInput onChangeText={text => this.updateForm({points: text}) } value={String(this.state.essay.points)}/>
                 <FormValidationMessage>
                     Points is required
                 </FormValidationMessage>
                 <Text/>
-                <View style={{flex: 1, flexDirection: 'row'}}>
+                <View>
+
+                    <Button
+                               color="white"
+                               title="Update"
+                               buttonStyle= {{
+                                   backgroundColor: "rgba(92, 99,216, 1)",
+                                   width: 250,
+                                   height: 45,
+                                   borderColor: "transparent",
+                                   borderWidth: 0,
+                                   borderRadius: 5,
+                                   marginBottom:5
+                               }}
+                               onPress={() => this.updateEssayWidget()}
+                    />
                     <Button	backgroundColor="red"
                                color="white"
                                title="Cancel"
-                               style= {{
-                                   width: 100,
+                               buttonStyle= {{
+                                   width: 250,
                                    height: 45,
                                    borderColor: "transparent",
                                    borderWidth: 0,
-                                   borderRadius: 10
+                                   borderRadius: 5,
+                                   marginBottom:5
                                }}
+                               onPress={() => this.props.navigation
+                                   .navigate("ExamWidget")}
                     />
-                    <Button	backgroundColor="#1a75ff"
+                    <Button	backgroundColor="#4CAF50"
                                color="white"
-                               title="Submit"
-                               style= {{
-                                   backgroundColor: "rgba(92, 99,216, 1)",
-                                   width: 100,
+                               title="Preview"
+                               buttonStyle= {{
+                                   width: 250,
                                    height: 45,
                                    borderColor: "transparent",
                                    borderWidth: 0,
-                                   borderRadius: 10
+                                   borderRadius: 5,
+                                   marginBottom:5
                                }}
-                               onPress={() => this.addEssayWidget()}
-                    />
+                               onPress={() => this.props.navigation
+                                   .navigate("EssayPreview", {essay:this.state.essay})}/>
 
                 </View>
               </Card>

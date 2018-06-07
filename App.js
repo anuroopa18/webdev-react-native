@@ -37,6 +37,7 @@ class Home extends React.Component {
                             .navigate('CourseList') } />
 
 
+
             </ScrollView>
         )
     }

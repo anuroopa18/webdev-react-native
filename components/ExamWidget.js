@@ -1,78 +1,87 @@
 import React, {Component} from 'react'
-import {ScrollView,View, Alert} from 'react-native'
-import {ListItem,Text,Button,Card,FormLabel,FormInput,FormValidationMessage} from 'react-native-elements'
+import {ScrollView, View, Alert} from 'react-native'
+import {ListItem, Text, Button, Card, FormLabel, FormInput, FormValidationMessage} from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 class ExamWidget extends Component {
     static navigationOptions = {title: 'Exam Editor'}
+
     constructor(props) {
         super(props)
         this.state = {
-            widgetId:'',
-            lessonId:'',
-            questions:[],
-            examTitle:'',
-            essayQuestion:{}
+            widgetId: '',
+            lessonId: '',
+            questions: [],
+            examTitle: '',
+            essayQuestion: {},
+            multipleChoice: {},
+            trueOrFalse: {},
+            fillInTheBlanks: {}
 
         }
+        this.createEssayQuestion = this.createEssayQuestion.bind(this);
+        this.createMultipleQuestion = this.createMultipleQuestion.bind(this);
+        this.createTrueOrFalseQuestion = this.createTrueOrFalseQuestion.bind(this);
 
     }
+
     componentDidMount() {
         const {navigation} = this.props;
         const lessonId = navigation.getParam("lessonId")
-        const widgetId=navigation.getParam("widgetId")
+        const widgetId = navigation.getParam("widgetId")
         this.setState({
-            lessonId:lessonId,
-            widgetId:widgetId
-
+            lessonId: lessonId,
+            widgetId: widgetId,
+            essayQuestion: {id: 1, title: "New Essay Question", type: "Essay", points: 0},
+            multipleChoice: {id: 1, title: "New Multiple Choice Question", type: "MultipleChoice", points: 0,options:"No Options"},
+            trueOrFalse: {id: 1, title: "New TrueOrFalse Question", type: "TrueOrFalse", points: 0, isTrue: false},
+            fillInTheBlanks: {id: 1, title: "New FillInTheBlanks Question", type: "FillInTheBlanks", points: 0}
         })
-        fetch("https://webdev-smr1.herokuapp.com/api/exam/"+widgetId+"/base")
+        fetch("https://webdev-smr1.herokuapp.com/api/exam/" + widgetId + "/base")
             .then(response => (response.json()))
             .then(questions => this.setState({questions}))
 
 
     }
 
-    updateForm(newState){
+    updateForm(newState) {
         this.setState(newState);
     }
 
-    updateExamTitle = () =>{
-        fetch("http://192.168.0.12:8080/api/exam/"+ this.state.widgetId,{
-            method:'put',
+    updateExamTitle = () => {
+        fetch("http://192.168.0.12:8080/api/exam/" + this.state.widgetId, {
+            method: 'put',
             body: JSON.stringify({
-                examTitle:this.state.examTitle,
+                examTitle: this.state.examTitle,
             }),
-            headers:{
+            headers: {
                 'content-type': 'application/json'
             }
-        }).then(function(response){
+        }).then(function (response) {
             return response.json();
         }).then(() => Alert.alert('Updated!'));
     }
 
-    componentWillReceiveProps(){
+    componentWillReceiveProps() {
         const {navigation} = this.props;
         const lessonId = navigation.getParam("lessonId")
-        const widgetId=navigation.getParam("widgetId")
+        const widgetId = navigation.getParam("widgetId")
         this.setState({
-            lessonId:lessonId,
-            widgetId:widgetId
+            lessonId: lessonId,
+            widgetId: widgetId
 
         })
-        fetch("https://webdev-smr1.herokuapp.com/api/exam/"+widgetId+"/base")
+        fetch("https://webdev-smr1.herokuapp.com/api/exam/" + widgetId + "/base")
             .then(response => (response.json()))
             .then(questions => this.setState({questions}))
     }
 
-    findQuestionsForExam = (widgetId) =>{
-        fetch("https://webdev-smr1.herokuapp.com/api/exam/"+widgetId+"/base")
+    findQuestionsForExam = (widgetId) => {
+        fetch("https://webdev-smr1.herokuapp.com/api/exam/" + widgetId + "/base")
             .then(response => (response.json()))
             .then(questions => this.setState({questions}))
     }
-
-
 
 
     deleteQuestion = (questionId) => {
@@ -85,9 +94,60 @@ class ExamWidget extends Component {
     }
 
     createEssayQuestion = () => {
-
+        fetch("https://webdev-smr1.herokuapp.com/api/exam/" + this.state.widgetId + "/essay", {
+            method: 'post',
+            body: JSON.stringify(this.state.essayQuestion),
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(function (response) {
+            return response.json();
+        }).then(() => Alert.alert('Question Added')).then(() => {
+            this.findQuestionsForExam(this.state.widgetId);
+        });
     }
 
+    createMultipleQuestion = () => {
+        fetch("https://webdev-smr1.herokuapp.com/api/exam/" + this.state.widgetId + "/choice", {
+            method: 'post',
+            body: JSON.stringify(this.state.multipleChoice),
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(function (response) {
+            return response.json();
+        }).then(() => Alert.alert('Question Added')).then(() => {
+            this.findQuestionsForExam(this.state.widgetId);
+        });
+    }
+
+    createTrueOrFalseQuestion = () => {
+        fetch("https://webdev-smr1.herokuapp.com/api/exam/" + this.state.widgetId + "/truefalse", {
+            method: 'post',
+            body: JSON.stringify(this.state.trueOrFalse),
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(function (response) {
+            return response.json();
+        }).then(() => Alert.alert('Question Added')).then(() => {
+            this.findQuestionsForExam(this.state.widgetId);
+        });
+    }
+
+    createFillInTheBlanksQuestion = () => {
+        fetch("https://webdev-smr1.herokuapp.com/api/exam/" + this.state.widgetId + "/blanks", {
+            method: 'post',
+            body: JSON.stringify(this.state.fillInTheBlanks),
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(function (response) {
+            return response.json();
+        }).then(() => Alert.alert('Question Added')).then(() => {
+            this.findQuestionsForExam(this.state.widgetId);
+        });
+    }
 
 
     render() {
@@ -95,180 +155,197 @@ class ExamWidget extends Component {
             'Fill in the blank',
             'Essay',
             'True or\nfalse']
-        return(
-            <ScrollView style={{padding: 15}}>
+        return (
+            <ScrollView>
+                <View>
+                    <Card title="Exam Title">
+                        <FormLabel>Update Exam Title</FormLabel>
 
-
-                <View >
-                    <Button	backgroundColor="#ff1a66"
-                               color="white"
-                               title="MultipleChoice"
-                               style= {{
-                                   width: 300,
-                                   height: 45,
-                                   borderColor: "transparent",
-                                   borderWidth: 0,
-                                   borderRadius: 10
-                               }}
-                               onPress={() => this.props.navigation
-                                   .navigate('MultipleChoiceQuestionWidget',{type:'MultipleChoice',widgetId:this.state.widgetId}) }
-                    />
-
-                    <Text> </Text>
-                    <Button	backgroundColor="#ff1a66"
-                               color="white"
-                               title="FillInTheBlanks"
-                               style= {{
-                                   width: 300,
-                                   height: 45,
-                                   borderColor: "transparent",
-                                   borderWidth: 0,
-                                   borderRadius: 10
-                               }}
-                               onPress={() => this.props.navigation
-                                   .navigate('FillInTheBlanksQuestionWidget',{type:'FillInTheBlanks',widgetId:this.state.widgetId}) }
-
-                    />
-
-                    <Text> </Text>
-                    <Button	backgroundColor="#ff1a66"
-                               color="white"
-                               title="Essay"
-                               style= {{
-                                   width: 300,
-                                   height: 45,
-                                   borderColor: "transparent",
-                                   borderWidth: 0,
-                                   borderRadius: 10
-                               }}
-                               onPress={() => this.props.navigation
-                                   .navigate('EssayQuestionWidget',{type:'Essay',widgetId:this.state.widgetId}) }
-                    />
-                    <Text> </Text>
-                    <Button	backgroundColor="#ff1a66"
-                               color="white"
-                               title="TrueOrFalse"
-                               style= {{
-                                   width: 300,
-                                   height: 45,
-                                   borderColor: "transparent",
-                                   borderWidth: 0,
-                                   borderRadius: 10
-                               }}
-                               onPress={() => this.props.navigation
-                                   .navigate('TrueOrFalseQuestionWidget',{type:'TrueOrFalse',widgetId:this.state.widgetId}) }
-                    />
-                    <Text> </Text>
-                    <Card>
-                    <FormLabel>Update Exam Title</FormLabel>
-
-                    <FormInput onChangeText={text => this.updateForm({examTitle: text}) } value={this.state.examTitle}/>
+                        <FormInput onChangeText={text => this.updateForm({examTitle: text})}
+                                   value={this.state.examTitle}/>
                         <Text> </Text>
-                        <Button	backgroundColor="#ff1a66"
-                                   color="white"
-                                   title="Update"
-                                   style= {{
-                                       width: 200,
-                                       height: 45,
-                                       borderColor: "transparent",
-                                       borderWidth: 0,
-                                       borderRadius: 10
-                                   }}
-                                   onPress={() => this.updateExamTitle() }
+                        <View>
+                        <Button
+                                color="white"
+                                title="Update"
+                                buttonStyle={{
+                                    width: 250,
+                                    height: 45,
+                                    borderColor: "transparent",
+                                    backgroundColor: "rgba(92, 99,216, 1)",
+                                    borderWidth: 0,
+                                    borderRadius: 5,
+                                    marginLeft:10
+                                }}
+                                onPress={() => this.updateExamTitle()}
                         />
-                        </Card>
-
-
+                        </View>
+                    </Card>
 
                 </View>
                 <Text> </Text>
-
-                <Text h3>Essay Questions</Text>
+                <Card>
+                    <View style={{flex: 1, flexDirection: 'row'}}>
+                        <View style={{width: 200}}>
+                            <Text h4>Essay Questions</Text>
+                        </View>
+                        <View style={{width: 100, marginLeft: 75}}>
+                            <Icon
+                                onPress={() => this.createEssayQuestion()}
+                                reverse
+                                name='plus-circle'
+                                type='font-awesome'
+                                size={40}
+                            />
+                        </View>
+                    </View>
                     {this.state.questions
-                    .filter(function(question){if(question.type == 'Essay') return question})
-                    .map(
-                        (question, index) => (
-                            <ListItem
-                                key={index}
-                                onPress={() => this.props.navigation
-                                    .navigate('EssayPreview',{questionId:question.id})}
-                                title={question.title}
-                                leftIcon={<Icon
-                                    reverse
-                                    name='trash'
-                                    type='font-awesome'
-                                    size={30}
-                                    onPress={() => this.deleteQuestion(question.id)}
-                                    style={{paddingRight:20}}
-                                />}
-                            />))}
-                <Text> </Text>
+                        .filter(function (question) {
+                            if (question.type == 'Essay') return question
+                        })
+                        .map(
+                            (question, index) => (
+                                <ListItem
+                                    key={index}
+                                    onPress={() => this.props.navigation
+                                        .navigate('EssayQuestionWidget', {
+                                            questionId: question.id,
+                                            widgetId: this.state.widgetId
+                                        })}
+                                    title={question.title}
+                                    leftIcon={<Icon
+                                        reverse
+                                        name='trash'
+                                        type='font-awesome'
+                                        size={30}
+                                        onPress={() => this.deleteQuestion(question.id)}
+                                        style={{paddingRight: 20}}
+                                    />}
+                                />))}
+                </Card>
+                <Card>
+                    <View style={{flex: 1, flexDirection: 'row'}}>
+                        <View style={{width: 200}}>
+                            <Text h4>Fill in the Blanks Questions</Text>
+                        </View>
+                        <View style={{width: 100, marginLeft: 75}}>
+                            <Icon
+                                onPress={() => this.createFillInTheBlanksQuestion()}
+                                reverse
+                                name='plus-circle'
+                                type='font-awesome'
+                                size={40}
+                            />
+                        </View>
+                    </View>
+                    {this.state.questions
+                        .filter(function (question) {
+                            if (question.type == 'FillInTheBlanks') return question
+                        })
+                        .map(
+                            (question, index) => (
+                                <ListItem
+                                    key={index}
+                                    onPress={() => this.props.navigation
+                                        .navigate('FillInTheBlanksQuestionWidget', {
+                                            questionId: question.id,
+                                            widgetId: this.state.widgetId
+                                        })}
+                                    title={question.title}
+                                    leftIcon={<Icon
+                                        reverse
+                                        name='trash'
+                                        type='font-awesome'
+                                        size={30}
+                                        onPress={() => this.deleteQuestion(question.id)}
+                                        style={{paddingRight: 20}}
+                                    />}
+                                />))}
+                    <Text> </Text>
+                </Card>
+                <Card>
+                    <View style={{flex: 1, flexDirection: 'row'}}>
+                        <View style={{width: 200}}>
+                            <Text h4>True Or False Questions</Text>
+                        </View>
+                        <View style={{width: 100, marginLeft: 75}}>
+                            <Icon
+                                onPress={() => this.createTrueOrFalseQuestion()}
+                                reverse
+                                name='plus-circle'
+                                type='font-awesome'
+                                size={40}
+                            />
+                        </View>
+                    </View>
+                    {this.state.questions
+                        .filter(function (question) {
+                            if (question.type == 'TrueOrFalse') return question
+                        })
+                        .map(
+                            (question, index) => (
+                                <ListItem
+                                    key={index}
+                                    onPress={() => this.props.navigation
+                                        .navigate('TrueOrFalseQuestionWidget', {
+                                            questionId: question.id,
+                                            widgetId: this.state.widgetId
+                                        })}
+                                    title={question.title}
+                                    leftIcon={<Icon
+                                        reverse
+                                        name='trash'
+                                        type='font-awesome'
+                                        size={30}
+                                        onPress={() => this.deleteQuestion(question.id)}
+                                        style={{paddingRight: 20}}
+                                    />}
+                                />))}
 
-                <Text h3>Fill In the blanks Questions</Text>
-                {this.state.questions
-                    .filter(function(question){if(question.type == 'FillInTheBlanks') return question})
-                    .map(
-                        (question, index) => (
-                            <ListItem
-                                key={index}
-                                onPress={() => this.props.navigation
-                                    .navigate('FillInTheBlanksPreview',{questionId:question.id})}
-                                title={question.title}
-                                leftIcon={<Icon
-                                    reverse
-                                    name='trash'
-                                    type='font-awesome'
-                                    size={30}
-                                    onPress={() => this.deleteQuestion(question.id)}
-                                    style={{paddingRight:20}}
-                                />}
-                            />))}
-                <Text> </Text>
-
-                <Text h3>True or False question</Text>
-                {this.state.questions
-                    .filter(function(question){if(question.type == 'TrueOrFalse') return question})
-                    .map(
-                        (question, index) => (
-                            <ListItem
-                                key={index}
-                                onPress={() => this.props.navigation
-                                    .navigate('TrueOrFalsePreview',{questionId:question.id})}
-                                title={question.title}
-                                leftIcon={<Icon
-                                    reverse
-                                    name='trash'
-                                    type='font-awesome'
-                                    size={30}
-                                    onPress={() => this.deleteQuestion(question.id)}
-                                    style={{paddingRight:20}}
-                                />}
-                            />))}
-                <Text> </Text>
-
-                <Text h3>Multiple Choice Question</Text>
-                {this.state.questions
-                    .filter(function(question){if(question.type == 'MultipleChoice') return question})
-                    .map(
-                        (question, index) => (
-                            <ListItem
-                                key={index}
-                                onPress={() => this.props.navigation
-                                    .navigate('MultipleChoicePreview',{questionId:question.id})}
-                                title={question.title}
-                                leftIcon={<Icon
-                                    reverse
-                                    name='trash'
-                                    type='font-awesome'
-                                    size={30}
-                                    onPress={() => this.deleteQuestion(question.id)}
-                                    style={{paddingRight:20}}
-                                />}
-                            />))}
-                <Text> </Text>
+                </Card>
+                <Card>
+                    <View style={{flex: 1, flexDirection: 'row'}}>
+                        <View style={{width: 200}}>
+                            <Text h4>Multiple choice Questions</Text>
+                        </View>
+                        <View style={{width: 100, marginLeft: 75}}>
+                            <Icon
+                                onPress={() => this.createMultipleQuestion()}
+                                reverse
+                                name='plus-circle'
+                                type='font-awesome'
+                                size={40}
+                            />
+                        </View>
+                    </View>
+                    {this.state.questions
+                        .filter(function (question) {
+                            if (question.type == 'MultipleChoice') return question
+                        })
+                        .map(
+                            (question, index) => (
+                                <ListItem
+                                    key={index}
+                                    onPress={() => this.props.navigation
+                                        .navigate('MultipleChoiceQuestionWidget', {
+                                            questionId: question.id,
+                                            widgetId: this.state.widgetId
+                                        })}
+                                    title={question.title}
+                                    leftIcon={<Icon
+                                        reverse
+                                        name='trash'
+                                        type='font-awesome'
+                                        size={30}
+                                        onPress={() => this.deleteQuestion(question.id)}
+                                        style={{paddingRight: 20}}
+                                    />}
+                                />))}
+                </Card>
 
             </ScrollView>
         )
     }
 }
+
 export default ExamWidget

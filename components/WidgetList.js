@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {ScrollView, Alert} from 'react-native'
-import {ListItem,Text} from 'react-native-elements'
+import {ScrollView,View, Alert} from 'react-native'
+import {ListItem,Text,Card} from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
@@ -91,14 +91,22 @@ class WidgetList extends Component {
 
     render() {
         return(
-            <ScrollView style={{padding: 15}}>
-                <Text h3>Assignments <Icon
-                    onPress={() => this.createAssignment() }
-                    reverse
-                    name='plus-circle'
-                    type='font-awesome'
-                    size={40}
-                /></Text>
+            <ScrollView>
+                <Card>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                    <View style={{width:200}}>
+                        <Text h4>Assignments</Text>
+                    </View>
+                    <View style={{width:100,marginLeft:70}}>
+                        <Icon
+                            onPress={() => this.createAssignment() }
+                            reverse
+                            name='plus-circle'
+                            type='font-awesome'
+                            size={40}
+                        />
+                    </View>
+                </View>
 
                 {this.state.widgets
                     .filter(function(widget){if(widget.typ == 'Assignment') return widget})
@@ -118,16 +126,23 @@ class WidgetList extends Component {
                                 style={{paddingRight:20}}
                            />}
                         />))}
-                <Text></Text>
-                <Text></Text>
-                <Text h3>Exams <Icon
-                    reverse
-                    name='plus-circle'
-                    type='font-awesome'
-                    size={40}
-                    onPress={() => this.createExam()}
-                    style={{marginLeft:20}}
-                /></Text>
+
+                </Card>
+                <Card>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                    <View style={{width:200}}>
+                        <Text h4>Exams</Text>
+                    </View>
+                    <View style={{width:100,marginLeft:70}}>
+                        <Icon
+                            onPress={() => this.createExam() }
+                            reverse
+                            name='plus-circle'
+                            type='font-awesome'
+                            size={40}
+                        />
+                    </View>
+                </View>
                  {this.state.widgets
                     .filter(function(widget){if(widget.typ == 'Exam') return widget})
                     .map(
@@ -146,6 +161,7 @@ class WidgetList extends Component {
                                     style={{paddingRight:20}}/>}
                             />
                            ))}
+                </Card>
             </ScrollView>
         )
     }

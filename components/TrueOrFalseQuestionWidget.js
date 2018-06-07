@@ -10,28 +10,39 @@ class TrueOrFalseQuestionWidget extends Component {
     constructor(props){
         super(props)
         this.state={
-            qType:'',
+            questionId:'',
             widgetId:'',
             title:'',
             description:'',
             points:'',
-            true:''
+            trueOrFalse:{},
+            isTrue:false
 
         }
 
     }
 
-
-
     componentDidMount(){
         const{navigation} =this.props;
         const widgetId = navigation.getParam("widgetId")
-        const qType = navigation.getParam("type")
+        const questionId = navigation.getParam("questionId")
         this.setState({
             widgetId:widgetId,
-            qType:qType
+            questionId:questionId
 
         })
+
+        this.findTrueOrFalseQuestionById(questionId)
+
+    }
+
+    findTrueOrFalseQuestionById = (questionId) => {
+
+        fetch("https://webdev-smr1.herokuapp.com/api/base/"+questionId)
+            .then(response => (response.json()))
+            .then(trueOrFalse => this.setState({trueOrFalse}))
+            .then(() => this.setState({isTrue:this.state.trueOrFalse.isTrue}))
+
 
     }
 
@@ -39,17 +50,15 @@ class TrueOrFalseQuestionWidget extends Component {
         this.setState(newState);
     }
 
-    addTrueOrFalseWidget = () =>{
-        fetch("https://webdev-smr1.herokuapp.com/api/exam/"+ this.state.widgetId +"/truefalse",{
-            method:'post',
+    updateTrueOrFalseWidget = () =>{
+        fetch("https://webdev-smr1.herokuapp.com/api/truefalse/"+ this.state.questionId,{
+            method:'put',
             body: JSON.stringify({
                 title:this.state.title,
                 description:this.state.description,
                 points:this.state.points,
                 widgetId:this.state.widgetId,
-                type:this.state.qType,
-                true:this.state.true
-
+                isTrue:this.state.isTrue
 
             }),
             headers:{
@@ -57,62 +66,83 @@ class TrueOrFalseQuestionWidget extends Component {
             }
         }).then(function(response){
             return response.json();
-        }).then(() => Alert.alert('Question Added'));;
+        }).then(() => Alert.alert('Question Updated!'))
+            .then(() => this.props.navigation
+                .navigate('WidgetList',{widgetId: this.state.widgetId}));
     }
 
 
     render() {
         return(
-            <ScrollView style={{marginLeft:15,marginRight:15}}>
+            <ScrollView>
                 <Card>
                 <FormLabel>Title</FormLabel>
-                <FormInput  onChangeText={text => this.updateForm({title: text}) }/>
+                <FormInput  onChangeText={text => this.updateForm({title: text}) } value={this.state.trueOrFalse.title}/>
                 <FormValidationMessage>
                     Title is required
                 </FormValidationMessage>
                 <FormLabel>Description</FormLabel>
-                <FormInput onChangeText={text => this.updateForm({description: text}) }/>
+                <FormInput onChangeText={text => this.updateForm({description: text}) } value={this.state.trueOrFalse.description}/>
                 <FormValidationMessage>
                     Description is required
                 </FormValidationMessage>
                 <FormLabel>Points</FormLabel>
-                <FormInput onChangeText={text => this.updateForm({points: text}) }/>
+                <FormInput onChangeText={text => this.updateForm({points: text}) } value={String(this.state.trueOrFalse.points)}/>
                 <FormValidationMessage>
                     Points is required
                 </FormValidationMessage>
+
                 <Text/>
 
                     <CheckBox title='The answer is true' onPress={() => this.setState
-                    ({true: !this.state.true})}
-                              checked={this.state.true}/>
+                    ({isTrue: !this.state.isTrue})}
+                              checked={this.state.isTrue}/>
                     <Text/>
 
 
-                <View style={{flex: 1, flexDirection: 'row'}}>
+                <View>
+
+                    <Button
+                               color="white"
+                               title="Update"
+                               buttonStyle= {{
+                                   backgroundColor: "rgba(92, 99,216, 1)",
+                                   width: 250,
+                                   height: 45,
+                                   borderColor: "transparent",
+                                   borderWidth: 0,
+                                   borderRadius: 5,
+                                   marginBottom:5
+                               }}
+                               onPress={() => this.updateTrueOrFalseWidget()}
+                    />
                     <Button	backgroundColor="red"
                                color="white"
                                title="Cancel"
-                               style= {{
-                                   width: 100,
+                               buttonStyle= {{
+                                   width: 250,
                                    height: 45,
                                    borderColor: "transparent",
                                    borderWidth: 0,
-                                   borderRadius: 10
+                                   borderRadius: 5,
+                                   marginBottom:5
                                }}
+                               onPress={() => this.props.navigation
+                                   .navigate("ExamWidget")}
                     />
-                    <Button	backgroundColor="#1a75ff"
+                    <Button	backgroundColor="#4CAF50"
                                color="white"
-                               title="Submit"
-                               style= {{
-                                   backgroundColor: "rgba(92, 99,216, 1)",
-                                   width: 100,
+                               title="Preview"
+                               buttonStyle= {{
+                                   width: 250,
                                    height: 45,
                                    borderColor: "transparent",
                                    borderWidth: 0,
-                                   borderRadius: 10
+                                   borderRadius: 5,
+                                   marginBottom:5
                                }}
-                               onPress={() => this.addTrueOrFalseWidget()}
-                    />
+                               onPress={() => this.props.navigation
+                                   .navigate("TrueOrFalsePreview", {trueOrFalse:this.state.trueOrFalse})}/>
                 </View>
                 </Card>
             </ScrollView>

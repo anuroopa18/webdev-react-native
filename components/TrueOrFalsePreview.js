@@ -14,54 +14,61 @@ class TrueOrFalsePreview extends Component {
     componentDidMount() {
         const {navigation} = this.props;
         const questionId = navigation.getParam("questionId")
+        const trueOrFalse = navigation.getParam("trueOrFalse")
         this.setState({
-            questionId:questionId
+            questionId:questionId,
+            trueOrFalse:trueOrFalse
 
         })
-        this.findTrueOrFalseQuestionById(questionId)
-    }
-
-    findTrueOrFalseQuestionById = (questionId) => {
-
-        fetch("https://webdev-smr1.herokuapp.com/api/base/"+questionId)
-            .then(response => (response.json()))
-            .then(trueOrFalse => this.setState({trueOrFalse}))
 
     }
+
+
     render() {
         return(
-            <ScrollView style={{padding: 15}}>
-                <Card>
-                    <Text style={{fontSize:30}}> {this.state.trueOrFalse.title}  <Text style={{fontSize:20,textAlign: 'right'}}> {this.state.trueOrFalse.points} pts </Text> </Text>
+            <ScrollView>
+                <Card containerStyle={{width:350,marginLeft:20}}>
+                    <View style={{flex: 1, flexDirection: 'row'}}>
+                        <View style={{width:200}}>
+                        <Text h4>{this.state.trueOrFalse.title}</Text>
+                    </View>
+                    <View style={{width:110}}>
+                        <Text style={{fontSize: 20,paddingTop:5,marginLeft:40}}>{this.state.trueOrFalse.points} pts </Text>
+                    </View>
+                    </View>
+
+
                     <Text> </Text>
                     <Text style={{fontSize:20}}> {this.state.trueOrFalse.description} </Text>
                     <Text> </Text>
-                    <CheckBox title='The answer is true' checked={this.state.trueOrFalse.true}/>
+                    <CheckBox title='The answer is true' checked={this.state.trueOrFalse.isTrue}/>
                     <Text> </Text>
                     <View style={{flex: 1, flexDirection: 'row'}}>
                         <Button	backgroundColor="red"
                                    color="white"
                                    title="Cancel"
-                                   style= {{
+                                   buttonStyle={{
                                        width: 100,
                                        height: 45,
                                        borderColor: "transparent",
                                        borderWidth: 0,
-                                       borderRadius: 10
+                                       borderRadius: 5
                                    }}
                         />
                         <Button	backgroundColor="#1a75ff"
                                    color="white"
                                    title="Submit"
-                                   style= {{
+                                   buttonStyle={{
                                        backgroundColor: "rgba(92, 99,216, 1)",
                                        width: 100,
                                        height: 45,
                                        borderColor: "transparent",
                                        borderWidth: 0,
-                                       borderRadius: 10
+                                       borderRadius: 5
+
                                    }}
                         />
+
                     </View>
                 </Card>
             </ScrollView>
