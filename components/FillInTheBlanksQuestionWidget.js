@@ -6,7 +6,7 @@ import {Text, ListItem,FormLabel,FormInput,FormValidationMessage,Button,CheckBox
 
 
 class FillInTheBlanksQuestionWidget extends Component {
-    static navigationOptions = {title: 'Essay Question Editor'}
+    static navigationOptions = {title: 'FillInTheBlanks'}
     constructor(props){
         super(props)
         this.state={
@@ -15,7 +15,7 @@ class FillInTheBlanksQuestionWidget extends Component {
             title:'',
             description:'',
             points:'',
-            variable:''
+            variables:''
 
 
         }
@@ -41,7 +41,7 @@ class FillInTheBlanksQuestionWidget extends Component {
     }
 
     addFillInTheBlanksQuestion = () =>{
-        fetch("http://192.168.0.12:8080/api/exam/"+ this.state.widgetId +"/blanks",{
+        fetch("https://webdev-smr1.herokuapp.com/api/exam/"+ this.state.widgetId +"/blanks",{
             method:'post',
             body: JSON.stringify({
                 title:this.state.title,
@@ -49,7 +49,7 @@ class FillInTheBlanksQuestionWidget extends Component {
                 points:this.state.points,
                 widgetId:this.state.widgetId,
                 type:this.state.qType,
-                variable:this.state.variable
+                variables:this.state.variables
 
             }),
             headers:{
@@ -81,7 +81,7 @@ class FillInTheBlanksQuestionWidget extends Component {
                         Points is required
                     </FormValidationMessage>
                     <FormLabel>Variables</FormLabel>
-                    <FormInput onChangeText={text => this.updateForm({variable: text}) }/>
+                    <FormInput onChangeText={text => this.updateForm({variables: text}) }/>
                     <FormValidationMessage>
                         Variables is required
                     </FormValidationMessage>

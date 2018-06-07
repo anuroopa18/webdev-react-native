@@ -97,7 +97,8 @@ class WidgetList extends Component {
                     reverse
                     name='plus-circle'
                     type='font-awesome'
-                    size={40}/></Text>
+                    size={40}
+                /></Text>
 
                 {this.state.widgets
                     .filter(function(widget){if(widget.typ == 'Assignment') return widget})

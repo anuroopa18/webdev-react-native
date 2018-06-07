@@ -15,7 +15,7 @@ class TrueOrFalseQuestionWidget extends Component {
             title:'',
             description:'',
             points:'',
-            isTrue:1
+            true:''
 
         }
 
@@ -40,7 +40,7 @@ class TrueOrFalseQuestionWidget extends Component {
     }
 
     addTrueOrFalseWidget = () =>{
-        fetch("http://192.168.0.12:8080/api/exam/"+ this.state.widgetId +"/truefalse",{
+        fetch("https://webdev-smr1.herokuapp.com/api/exam/"+ this.state.widgetId +"/truefalse",{
             method:'post',
             body: JSON.stringify({
                 title:this.state.title,
@@ -48,7 +48,7 @@ class TrueOrFalseQuestionWidget extends Component {
                 points:this.state.points,
                 widgetId:this.state.widgetId,
                 type:this.state.qType,
-                isTrue:this.state.isTrue
+                true:this.state.true
 
 
             }),
@@ -82,9 +82,9 @@ class TrueOrFalseQuestionWidget extends Component {
                 </FormValidationMessage>
                 <Text/>
 
-                    <CheckBox title='The answer is true' onPress={() => this.updateForm
-                    ({isTrue: !this.state.isTrue})}
-                              checked={this.state.isTrue}/>
+                    <CheckBox title='The answer is true' onPress={() => this.setState
+                    ({true: !this.state.true})}
+                              checked={this.state.true}/>
                     <Text/>
 
 

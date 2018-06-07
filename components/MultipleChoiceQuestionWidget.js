@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {ScrollView,View, Alert} from 'react-native'
 import {Text, ListItem,FormLabel,FormInput,FormValidationMessage,Button,CheckBox,Card} from 'react-native-elements'
 
+
 class MultipleChoiceQuestionWidget extends Component {
     static navigationOptions = {title: 'Multiple Choice Question Editor'}
     constructor(props){
@@ -36,7 +37,7 @@ class MultipleChoiceQuestionWidget extends Component {
     }
 
     addMultipleChoiceWidget = () =>{
-        fetch("http://192.168.0.12:8080/api/exam/"+ this.state.widgetId +"/choice",{
+        fetch("https://webdev-smr1.herokuapp.com/api/exam/"+ this.state.widgetId +"/choice",{
             method:'post',
             body: JSON.stringify({
                 title:this.state.title,

@@ -38,7 +38,7 @@ class EssayQuestionWidget extends Component {
     }
 
     addEssayWidget = () =>{
-        fetch("http://192.168.0.12:8080/api/exam/"+ this.state.widgetId +"/essay",{
+        fetch("https://webdev-smr1.herokuapp.com/api/exam/"+ this.state.widgetId +"/essay",{
             method:'post',
             body: JSON.stringify({
                 title:this.state.title,
